@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
 
+import { ProductsService } from '../../services/products.service';
+import { Product } from '../../models/product';
+
+
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -9,12 +13,14 @@ import { TableModule } from 'primeng/table';
   styleUrl: './products.component.css'
 })
 export class ProductsComponent {
-  protected products: Array<any> = [
-    {
-      code: "Oui",
-      name: "Ouii",
-      category: "Ouiii",
-      quantity: "Ouiiiii"
-    }
-  ];
+  protected tab_products: Array<Product> = [];
+
+  constructor(
+    private _productsService: ProductsService,
+  ){}
+
+  ngOnInit(){
+    this.tab_products = this._productsService.tab_products;
+  }
+
 }
