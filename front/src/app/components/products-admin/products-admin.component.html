@@ -1,1 +1,69 @@
-<p>products-admin works!</p>
+
+
+<div class="card">
+    <p-table
+        #dt
+        [value]="tab_products"
+        dataKey="id"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [paginator]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="['code', 'name']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        editMode="row"
+        >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:40%" pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
+                <th style="width:40%" pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th style="width:20%">Actions</th>
+            </tr>
+            <tr>
+                <th>
+                    <p-columnFilter type="text" field="code" (input)="applyFilterGlobal($event, 'contains')"></p-columnFilter>
+                </th>
+                <th>
+                    <p-columnFilter type="text" field="name" (input)="applyFilterGlobal($event, 'contains')"></p-columnFilter>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="product">
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.code">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ product.code }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.name">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ product.name }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center gap-2">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow (click)="onRowEditInit(product)" class="p-button-rounded p-button-text"><i class="pi pi-pencil"></i></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success mr-2"><i class="pi pi-check"></i></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"><i class="pi pi-times"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No customers found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
