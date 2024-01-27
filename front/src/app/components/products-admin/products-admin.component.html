@@ -1,6 +1,13 @@
 
 
 <div class="card">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" class="p-button-success mr-2" (click)="openNew()"><i class="pi pi-plus"></i></button>
+            <button pButton pRipple label="Delete" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"><i class="pi pi-trash"></i></button>
+        </ng-template>
+    </p-toolbar>
+
     <p-table
         #dt
         [value]="tab_products"
@@ -13,14 +20,19 @@
         [globalFilterFields]="['code', 'name']"
         [tableStyle]="{ 'min-width': '75rem' }"
         editMode="row"
+        [(selection)]="selectedProducts"
         >
         <ng-template pTemplate="header">
             <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
                 <th style="width:40%" pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
                 <th style="width:40%" pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
                 <th style="width:20%">Actions</th>
             </tr>
             <tr>
+                <th></th>
                 <th>
                     <p-columnFilter type="text" field="code" (input)="applyFilterGlobal($event, 'contains')"></p-columnFilter>
                 </th>
@@ -31,6 +43,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
             <tr [pEditableRow]="product">
+                <td>
+                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                </td>
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -57,6 +72,7 @@
                         <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success mr-2"><i class="pi pi-check"></i></button>
                         <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"><i class="pi pi-times"></i></button>
                     </div>
+                    <button pButton pRipple class="p-button-rounded p-button-text p-button-warning" (click)="deleteProduct(product)"><i class="pi pi-trash"></i></button>
                 </td>
             </tr>
         </ng-template>
@@ -67,3 +83,68 @@
         </ng-template>
     </p-table>
 </div>
+
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <img [src]="'assets/showcase/images/demo/product/' + new_product.image" [alt]="new_product.image" class="product-image" *ngIf="new_product.image">
+        <div class="field">
+            <label for="name">Name</label>
+            <input type="text" pInputText id="name" [(ngModel)]="new_product.name" required autofocus />
+            <small class="p-error" *ngIf="submitted && !new_product.name">Name is required.</small>
+        </div>
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" pInputTextarea [(ngModel)]="new_product.description" required rows="3" cols="20"></textarea>
+        </div>
+
+        <div class="field">
+            <label for="inventoryStatus">Inventory Status</label>
+            <p-dropdown [(ngModel)]="new_product.inventoryStatus" inputId="inventoryStatus" [options]="statuses" placeholder="Select">
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+
+        <div class="field">
+            <label class="mb-3">Category</label>
+            <div class="formgrid grid">
+                <div class="field-radiobutton col-6">
+                    <p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="new_product.category"></p-radioButton>
+                    <label for="category1">Accessories</label>
+                </div>
+                <div class="field-radiobutton col-6">
+                    <p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="new_product.category"></p-radioButton>
+                    <label for="category2">Clothing</label>
+                </div>
+                <div class="field-radiobutton col-6">
+                    <p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="new_product.category"></p-radioButton>
+                    <label for="category3">Electronics</label>
+                </div>
+                <div class="field-radiobutton col-6">
+                    <p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="new_product.category"></p-radioButton>
+                    <label for="category4">Fitness</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="formgrid grid">
+            <div class="field col">
+                <label for="price">Price</label>
+                <p-inputNumber id="price" [(ngModel)]="new_product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+            </div>
+            <div class="field col">
+                <label for="quantity">Quantity</label>
+                <p-inputNumber id="quantity" [(ngModel)]="new_product.quantity"></p-inputNumber>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"><i class="pi pi-times"></i></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"><i class="pi pi-check"></i></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
