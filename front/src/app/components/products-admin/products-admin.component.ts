@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { RatingModule } from 'primeng/rating';
 
 import { ProductsService } from '../../services/products.service';
 import { Product } from '../../models/product';
@@ -21,7 +22,7 @@ import { Product } from '../../models/product';
 @Component({
   selector: 'app-products-admin',
   standalone: true,
-  imports: [CommonModule, TableModule, InputTextModule, InputTextareaModule, DropdownModule, TagModule, MultiSelectModule, FormsModule, ToolbarModule, DialogModule, ConfirmDialogModule, InputNumberModule, RadioButtonModule],
+  imports: [CommonModule, TableModule, InputTextModule, InputTextareaModule, DropdownModule, TagModule, MultiSelectModule, FormsModule, ToolbarModule, DialogModule, ConfirmDialogModule, InputNumberModule, RadioButtonModule, RatingModule],
   providers:[ConfirmationService, MessageService],
   templateUrl: './products-admin.component.html',
   styleUrl: './products-admin.component.css'
@@ -64,62 +65,62 @@ export class ProductsAdminComponent {
     this.new_product = {};
     this.submitted = false;
     this.productDialog = true;
-}
-
-deleteSelectedProducts() {
-  this._confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected products?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.tab_products = this.tab_products.filter(val => !this.selectedProducts.includes(val));
-          this.selectedProducts = [];
-      }
-  });
-}
-
-deleteProduct(product: Product) {
-  this._confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + product.name + '?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.tab_products = this.tab_products.filter(val => val.id !== product.id);
-          this.new_product = {};
-          this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
-      }
-  });
-}
-
-hideDialog() {
-  this.productDialog = false;
-  this.submitted = false;
-}
-
-saveProduct() {
-  this.submitted = true;
-
-  if (this.new_product.name.trim()) {
-      this.new_product.id = this.createId();
-      this.new_product.image = 'product-placeholder.svg';
-      this.tab_products.push(this.new_product);
-      this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-
-      this.tab_products = [...this.tab_products];
-      this.productDialog = false;
-      this.new_product = {};
   }
-}
 
-
-createId(): string {
-  let id = '';
-  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for ( var i = 0; i < 5; i++ ) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
+  deleteSelectedProducts() {
+    this._confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected products?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.tab_products = this.tab_products.filter(val => !this.selectedProducts.includes(val));
+            this.selectedProducts = [];
+        }
+    });
   }
-  return id;
-}
+
+  deleteProduct(product: Product) {
+    this._confirmationService.confirm({
+        message: 'Are you sure you want to delete ' + product.name + '?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.tab_products = this.tab_products.filter(val => val.id !== product.id);
+            this.new_product = {};
+            this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
+        }
+    });
+  }
+
+  hideDialog() {
+    this.productDialog = false;
+    this.submitted = false;
+  }
+
+  saveProduct() {
+    this.submitted = true;
+
+    if (this.new_product.name.trim()) {
+        this.new_product.id = this.createId();
+        this.new_product.image = 'product-placeholder.svg';
+        this.tab_products.push(this.new_product);
+        this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+
+        this.tab_products = [...this.tab_products];
+        this.productDialog = false;
+        this.new_product = {};
+    }
+  }
+
+
+  createId(): string {
+    let id = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for ( var i = 0; i < 5; i++ ) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
+  }
 
 
   onRowEditInit(product: Product) {
