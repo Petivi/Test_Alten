@@ -10,6 +10,8 @@ import { SelectItem } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { ProductsService } from '../../services/products.service';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
+
 import { Product } from '../../models/product';
 
 
@@ -28,6 +30,7 @@ export class ProductsComponent {
   sortField!: string;
 
   constructor(
+    private _breadcrumbService: BreadcrumbService,
     private _productsService: ProductsService,
   ){}
 
@@ -37,7 +40,8 @@ export class ProductsComponent {
     this.sortOptions = [
       { label: 'Price High to Low', value: '!price' },
       { label: 'Price Low to High', value: 'price' }
-  ];
+    ];
+    this._breadcrumbService.setBreadcrumb([{label: 'Products'}])
   }
 
 

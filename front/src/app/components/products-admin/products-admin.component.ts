@@ -17,6 +17,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
 
 import { ProductsService } from '../../services/products.service';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { Product } from '../../models/product';
 
 @Component({
@@ -37,6 +38,7 @@ export class ProductsAdminComponent {
   protected statuses: any[] = [];
 
   constructor(
+    private _breadcrumbService: BreadcrumbService,
     protected _productsService: ProductsService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
@@ -48,6 +50,7 @@ export class ProductsAdminComponent {
       {label: 'LOWSTOCK', value: 'LOWSTOCK'},
       {label: 'OUTOFSTOCK', value: 'OUTOFSTOCK'}
     ];
+    this._breadcrumbService.setBreadcrumb([{label: 'Admin'}])
   }
 
   resetNewProduct(){
