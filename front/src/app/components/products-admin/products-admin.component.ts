@@ -33,7 +33,7 @@ export class ProductsAdminComponent {
   protected tab_products2: Array<Product> = [];
   protected clonedProducts: { [s: string]: Product; } = {};
 
-  protected new_product: any = {};
+  protected new_product: Product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
   protected selectedProducts: Array<Product> = [];
   protected submitted: boolean = false;
   protected productDialog: boolean = false;
@@ -53,7 +53,11 @@ export class ProductsAdminComponent {
       {label: 'INSTOCK', value: 'instock'},
       {label: 'LOWSTOCK', value: 'lowstock'},
       {label: 'OUTOFSTOCK', value: 'outofstock'}
-  ];
+    ];
+  }
+
+  resetNewProduct(){
+    this.new_product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
   }
 
   applyFilterGlobal(event: any, stringVal: any) { 
@@ -62,7 +66,7 @@ export class ProductsAdminComponent {
 
 
   openNew() {
-    this.new_product = {};
+    this.resetNewProduct();
     this.submitted = false;
     this.productDialog = true;
   }
@@ -86,7 +90,7 @@ export class ProductsAdminComponent {
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
             this.tab_products = this.tab_products.filter(val => val.id !== product.id);
-            this.new_product = {};
+            this.resetNewProduct();
             this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
         }
     });
@@ -108,18 +112,13 @@ export class ProductsAdminComponent {
 
         this.tab_products = [...this.tab_products];
         this.productDialog = false;
-        this.new_product = {};
+        this.resetNewProduct();
     }
   }
 
 
-  createId(): string {
-    let id = '';
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for ( var i = 0; i < 5; i++ ) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
+  createId(): number {
+    return new Date().getTime(); // not secure at all (but at least unique)
   }
 
 
