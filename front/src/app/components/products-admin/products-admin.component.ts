@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { TableModule, Table } from 'primeng/table';
 import { InputTextModule  } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -11,6 +12,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 import { ProductsService } from '../../services/products.service';
 import { Product } from '../../models/product';
@@ -18,7 +21,7 @@ import { Product } from '../../models/product';
 @Component({
   selector: 'app-products-admin',
   standalone: true,
-  imports: [CommonModule, TableModule, InputTextModule, DropdownModule, TagModule, MultiSelectModule, FormsModule, ToolbarModule, DialogModule, ConfirmDialogModule],
+  imports: [CommonModule, TableModule, InputTextModule, InputTextareaModule, DropdownModule, TagModule, MultiSelectModule, FormsModule, ToolbarModule, DialogModule, ConfirmDialogModule, InputNumberModule, RadioButtonModule],
   providers:[ConfirmationService, MessageService],
   templateUrl: './products-admin.component.html',
   styleUrl: './products-admin.component.css'
@@ -44,6 +47,12 @@ export class ProductsAdminComponent {
   ngOnInit(){
     this.tab_products = this._productsService.tab_products;
     this.tab_products2 = this._productsService.tab_products;
+
+    this.statuses = [
+      {label: 'INSTOCK', value: 'instock'},
+      {label: 'LOWSTOCK', value: 'lowstock'},
+      {label: 'OUTOFSTOCK', value: 'outofstock'}
+  ];
   }
 
   applyFilterGlobal(event: any, stringVal: any) { 
@@ -91,16 +100,10 @@ saveProduct() {
   this.submitted = true;
 
   if (this.new_product.name.trim()) {
-      if (this.new_product.id) {
-          this.tab_products[this.findIndexById(this.new_product.id)] = this.new_product;
-          this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
-      }
-      else {
-          this.new_product.id = this.createId();
-          this.new_product.image = 'product-placeholder.svg';
-          this.tab_products.push(this.new_product);
-          this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-      }
+      this.new_product.id = this.createId();
+      this.new_product.image = 'product-placeholder.svg';
+      this.tab_products.push(this.new_product);
+      this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
 
       this.tab_products = [...this.tab_products];
       this.productDialog = false;
@@ -108,17 +111,6 @@ saveProduct() {
   }
 }
 
-findIndexById(id: number): number {
-  let index = -1;
-  for (let i = 0; i < this.tab_products.length; i++) {
-      if (this.tab_products[i].id === id) {
-          index = i;
-          break;
-      }
-  }
-
-  return index;
-}
 
 createId(): string {
   let id = '';
