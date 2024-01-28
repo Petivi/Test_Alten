@@ -30,10 +30,8 @@ import { Product } from '../../models/product';
 export class ProductsAdminComponent {
   @ViewChild('dt') dt: Table | undefined;
   protected tab_products: Array<Product> = [];
-  protected tab_products2: Array<Product> = [];
-  protected clonedProducts: { [s: string]: Product; } = {};
 
-  protected new_product: Product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
+  protected new_product: Product = new Product(0, "", "", "", "product-placeholder.svg", 0, "", 0, "", 0);
   protected selectedProducts: Array<Product> = [];
   protected submitted: boolean = false;
   protected productDialog: boolean = false;
@@ -47,7 +45,6 @@ export class ProductsAdminComponent {
 
   ngOnInit(){
     this.tab_products = this._productsService.tab_products;
-    this.tab_products2 = this._productsService.tab_products;
 
     this.statuses = [
       {label: 'INSTOCK', value: 'INSTOCK'},
@@ -57,7 +54,7 @@ export class ProductsAdminComponent {
   }
 
   resetNewProduct(){
-    this.new_product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
+    this.new_product = new Product(0, "", "", "", "product-placeholder.svg", 0, "", 0, "", 0);
   }
 
   applyFilterGlobal(event: any, stringVal: any) { 
