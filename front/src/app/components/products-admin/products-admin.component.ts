@@ -50,9 +50,9 @@ export class ProductsAdminComponent {
     this.tab_products2 = this._productsService.tab_products;
 
     this.statuses = [
-      {label: 'INSTOCK', value: 'instock'},
-      {label: 'LOWSTOCK', value: 'lowstock'},
-      {label: 'OUTOFSTOCK', value: 'outofstock'}
+      {label: 'INSTOCK', value: 'INSTOCK'},
+      {label: 'LOWSTOCK', value: 'LOWSTOCK'},
+      {label: 'OUTOFSTOCK', value: 'OUTOFSTOCK'}
     ];
   }
 
@@ -96,6 +96,11 @@ export class ProductsAdminComponent {
     });
   }
 
+  editProduct(product: Product) {
+    this.new_product = {...product};
+    this.productDialog = true;
+}
+
   hideDialog() {
     this.productDialog = false;
     this.submitted = false;
@@ -105,33 +110,35 @@ export class ProductsAdminComponent {
     this.submitted = true;
 
     if (this.new_product.name.trim()) {
+      if (this.new_product.id) {
+        this.tab_products[this.findIndexById(this.new_product.id)] = this.new_product;
+        this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+      }else{
         this.new_product.id = this.createId();
         this.new_product.image = 'product-placeholder.svg';
         this.tab_products.push(this.new_product);
         this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
 
-        this.tab_products = [...this.tab_products];
-        this.productDialog = false;
-        this.resetNewProduct();
+      }
+      this.tab_products = [...this.tab_products];
+      this.productDialog = false;
+      this.resetNewProduct();
     }
   }
 
+  findIndexById(id: number): number {
+    let index = -1;
+    for (let i = 0; i < this.tab_products.length; i++) {
+        if (this.tab_products[i].id === id) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+}
 
   createId(): number {
     return new Date().getTime(); // not secure at all (but at least unique)
-  }
-
-
-  onRowEditInit(product: Product) {
-    this.clonedProducts[product.id] = {...product};
-  }
-
-  onRowEditSave(product: Product) {
-    delete this.clonedProducts[product.id];
-  } 
-  
-  onRowEditCancel(product: Product, index: number) {
-    this.tab_products2[index] = this.clonedProducts[product.id];
-    delete this.clonedProducts[product.id];
   }
 }
