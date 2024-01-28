@@ -31,7 +31,7 @@ export class ProductsAdminComponent {
   @ViewChild('dt') dt: Table | undefined;
   protected tab_products: Array<Product> = [];
 
-  protected new_product: Product = new Product(0, "", "", "", "product-placeholder.svg", 0, "", 0, "", 0);
+  protected new_product: Product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
   protected selectedProducts: Array<Product> = [];
   protected submitted: boolean = false;
   protected productDialog: boolean = false;
@@ -54,7 +54,7 @@ export class ProductsAdminComponent {
   }
 
   resetNewProduct(){
-    this.new_product = new Product(0, "", "", "", "product-placeholder.svg", 0, "", 0, "", 0);
+    this.new_product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
   }
 
   applyFilterGlobal(event: any, stringVal: any) { 
