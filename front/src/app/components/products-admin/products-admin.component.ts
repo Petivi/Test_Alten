@@ -29,7 +29,6 @@ import { Product } from '../../models/product';
 })
 export class ProductsAdminComponent {
   @ViewChild('dt') dt: Table | undefined;
-  protected tab_products: Array<Product> = [];
 
   protected new_product: Product = new Product(0, "", "", "", "", 0, "", 0, "", 0);
   protected selectedProducts: Array<Product> = [];
@@ -38,14 +37,12 @@ export class ProductsAdminComponent {
   protected statuses: any[] = [];
 
   constructor(
-    private _productsService: ProductsService,
+    protected _productsService: ProductsService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
   ){}
 
   ngOnInit(){
-    this.tab_products = this._productsService.tab_products;
-
     this.statuses = [
       {label: 'INSTOCK', value: 'INSTOCK'},
       {label: 'LOWSTOCK', value: 'LOWSTOCK'},
@@ -74,7 +71,7 @@ export class ProductsAdminComponent {
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.tab_products = this.tab_products.filter(val => !this.selectedProducts.includes(val));
+            this._productsService.tab_products = this._productsService.tab_products.filter(val => !this.selectedProducts.includes(val));
             this.selectedProducts = [];
         }
     });
@@ -86,7 +83,7 @@ export class ProductsAdminComponent {
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.tab_products = this.tab_products.filter(val => val.id !== product.id);
+            this._productsService.tab_products = this._productsService.tab_products.filter(val => val.id !== product.id);
             this.resetNewProduct();
             this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
         }
@@ -96,7 +93,7 @@ export class ProductsAdminComponent {
   editProduct(product: Product) {
     this.new_product = {...product};
     this.productDialog = true;
-}
+  }
 
   hideDialog() {
     this.productDialog = false;
@@ -108,16 +105,15 @@ export class ProductsAdminComponent {
 
     if (this.new_product.name.trim()) {
       if (this.new_product.id) {
-        this.tab_products[this.findIndexById(this.new_product.id)] = this.new_product;
+        this._productsService.tab_products[this.findIndexById(this.new_product.id)] = this.new_product;
         this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
       }else{
         this.new_product.id = this.createId();
         this.new_product.image = 'product-placeholder.svg';
-        this.tab_products.push(this.new_product);
+        this._productsService.tab_products.push(this.new_product);
         this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
       }
 
-      this.tab_products = [...this.tab_products];
       this.productDialog = false;
       this.resetNewProduct();
     }
@@ -125,8 +121,8 @@ export class ProductsAdminComponent {
 
   findIndexById(id: number): number {
     let index = -1;
-    for (let i = 0; i < this.tab_products.length; i++) {
-        if (this.tab_products[i].id === id) {
+    for (let i = 0; i < this._productsService.tab_products.length; i++) {
+        if (this._productsService.tab_products[i].id === id) {
             index = i;
             break;
         }
