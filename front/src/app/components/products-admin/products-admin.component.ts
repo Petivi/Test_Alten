@@ -115,8 +115,8 @@ export class ProductsAdminComponent {
         this.new_product.image = 'product-placeholder.svg';
         this.tab_products.push(this.new_product);
         this._messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-
       }
+
       this.tab_products = [...this.tab_products];
       this.productDialog = false;
       this.resetNewProduct();
