@@ -6,14 +6,14 @@ module.exports = (app) => {
     app.get('/products', (req, res) => {
         Product.find({})
         .then(products => {
-        res.status(201).send(products);
+        res.status(200).send(products);
         })
     })
 
     app.get('/products/:id', (req, res) => {
         Product.findOne({ _id: req.params.id })
         .then(product => {
-            res.status(201).send({ response: product });
+            res.status(200).send({ response: product });
         });
     });
 
@@ -35,7 +35,7 @@ module.exports = (app) => {
         .then(el => {
             if(el){
                 Product.findOneAndUpdate({ _id: product_id}, product_data).then(product => {
-                    res.status(201).send({ response: "PRODUCT_UPDATED" });
+                    res.status(200).send({ response: "PRODUCT_UPDATED" });
                 });
             }else{
                 res.status(404).send({ error: "ERR_INCORRECT_PARAMETERS" });
@@ -46,7 +46,7 @@ module.exports = (app) => {
 
     app.delete('/products/:id', (req, res) => {
         Product.findOneAndDelete({ _id: req.params.id})
-        .then(() => res.status(201).send({ response: "PRODUCT_DELETED" }))
+        .then(() => res.status(200).send({ response: "PRODUCT_DELETED" }))
     })
 
 }
